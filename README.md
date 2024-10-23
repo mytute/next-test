@@ -1,50 +1,17 @@
-# 3 Project Structure     
+# 4 React Sever Component     
 
+React Server Component is a new architecture introduced by the React team in version 18 which was quickly embraced by Next.js.       
 
-> package.json   
-contains project dependencies and scripts.    
+The architecture introduces a new way of creating React components, splitting team in to two types:    
+  * Server components.   
+  * Client components.    
 
-> next.config.ts    
-for next.js configurations.    
+### Server components     
+  * In next.js, all components are Server components by default.     
+  * They have the ability to run tasks like reading files or fetching data from a database.        
+  * However, they don't have the ability to use hooks or handle user interactions.     
 
-> tsconfig.json
-for typescript cofigurations.    
+### Client Components     
+  * To create a Client component, it's necessary to add "use client" at the top of the component file.    
+  * Client components can't perform tasks like reading files, but they have ability to use hooks and manage interactions.    
 
-> .eslintrc.json   
-for eslint configurations.    
-
-> tailwind.config.ts and postcss.config.ts     
-for tailwind configurations.    
-
-> package-lock.json    
-for cnsistent installation of our packages.     
-
-> .gitignore     
-for version control      
-
-> README.md     
-few instructions related to running building and deploying the application.    
-
-> next-env.d.ts    
-for typescript declaration for next.js    
-
-> .next folder     
-folder is generated when we run either the dev or build scripts. next.js application served from this folder. And this folder is added to gitignore.    
-
-> node_modules    
-this the folder that our project dependencies are installed.     
-
-> public folder    
-all the static assets to be served sucj as images and svgs
-
-> src>app>globals.css    
-global css file    
-
-> src>app>layout.tsx      
-the UI that can be shared across the diffrent pages in your application.     
-
-> src>app>page.tsx     
-unique UI we see on visition localhost:3000 in the browser.     
-
-### flow of the application.      
-when we run "npm run dev" it will open "layout.tsx" and root layout component is rendered. when we navigation "localhost:3000" children props always refer to the component defined in "page.tsx" in the "app" folder.     
