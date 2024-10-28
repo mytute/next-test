@@ -29,14 +29,14 @@ $ rm -rf src/app
   4.1 creat new folder call "about"(app/about) and inside it create file call "page.tsx".      
   > src/app/about/page.tsx    
   ```tsx 
-  export default fuction About(){
+  export default function About(){
       return <h1>About me</h1>
   }
   ```
   4.2 creat new folder call "profile"(app/profile) and inside it create file call "page.tsx".      
   > src/app/profile/page.tsx    
   ```tsx 
-  export default fuction Profile(){
+  export default function Profile(){
       return <h1>My Profile</h1>
   }
   ```
