@@ -1,52 +1,32 @@
-# 5 Routing     
+# 6 Nested Routs         
 
-Next.js has a file-system based routing machanism.      
+### create new page call "blog" with nested routes in following way 
 
-URL paths that users can access in the browser are defined by files and folders in your codebase.   
+1. localhost:3000/blog
+2. localhost:3000/blog/first
+3. localhost:3000/blog/second
 
-1. delete the "app" folder to learn how to create routes in nextjs.    
-```bash 
-$ rm -rf src/app
+
+1. create a page.tsx file inside blog folder "src/app/blog/page.tsx".     
+
+```ts
+export default function Blog(){
+  return <h1>Blog page</h1>
+}
 ```
 
-2. what are the rules that follow to make route inside nextjs framwork. (automatically add as route)    
-  * All routes must be placed inside the app folder.    
-  * Every file that corresponds to a route must be named page.js or page.tsx.     
-  * Every folder corresponds to a path segment in the browser URL.     
+2. now inside "blog" folder create file page inside "first" folder (src/app/blog/first/page.ts).   
+```ts
+export default function First(){
+  return <h1>Frist page</h1>
+}
+```
 
-3. show when browser url set to "localhost:3000" and load the "HomdePage"     
-  3.1 create new folder call "app" inside the "src" folder.     
-  3.2 inside "app" folder create file "page.tsx"  
-  > src/app/page.tsx      
-  ```tsx 
-  export default function Home(){
-      return <h1>Welcome home!</h1>
-  }
-  ```
-  3.3 show "layout.tsx" file magically created in the "app" folder.    
-  
-4. show how to make navigation for "about" and "profile" pages.     
-  4.1 creat new folder call "about"(app/about) and inside it create file call "page.tsx".      
-  > src/app/about/page.tsx    
-  ```tsx 
-  export default function About(){
-      return <h1>About me</h1>
-  }
-  ```
-  4.2 creat new folder call "profile"(app/profile) and inside it create file call "page.tsx".      
-  > src/app/profile/page.tsx    
-  ```tsx 
-  export default function Profile(){
-      return <h1>My Profile</h1>
-  }
-  ```
-  4.3 go to following urls and show the newly created pages are working      
-  ```bash 
-  localhost:3000/about
-  localhost:3000/profile
-  ```
+3. do the same thing for "second" page.   
+```ts
+export default function Second(){
+  return <h1>Second page</h1>
+}
+```
 
-5. show what hapend when user entered router not match and navigate to 404 automatically in nextjs.    
-
-
-
+Now enter the above 3 urls on the browser while app is runnig.    
