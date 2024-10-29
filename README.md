@@ -1,68 +1,78 @@
-# 9 Catch all Segments    
+# 10 Not Found Page.       
 
+when we enter url route on the browser we see the default 404 page.   
 
-using dynamic nested routes we can implement following routes that we practice in previous tute.    
-but if we have same "review" page for product, catalog, selling ect so because of we have file base route we have to create many same "review" pages.    
-```bash
-localhost:3000/products/1
-localhost:3000/products/1/review/1  
+1. To create custom not-found page simply create a file named "not-found.tsx" in the app foleder.    
+
+>src/app/not-found.tsx   
+```ts 
+import React from "react";
+ 
+const NotFound:React.FC = () => {
+  return (
+    <>
+      <h2>Page not found</h2>
+      <p>Cound not find requested resource</p>
+    </>
+  )
+}
+
+export default NotFound;
 ```
 
-To reuse same file in diffent route we can use "Catch all Segments". This approach significanly improves the folder scructure.       
-```bash
-localhost:3000/docs/feature1/concept1
-localhost:3000/docs/feature1/concept2
-localhost:3000/docs/feature2/concept1
-localhost:3000/docs/feature2/concept2
+2. not goto following routes and check.   
+```bash 
+http://localhost:3000/products/1 # working route
+http://localhost:3000/products   # show custom 404 page
+http://localhost:3000/pro        # show custom 404 page
 ```
 
-1. in the "app" folder create new folder call "docs".   
-2. in the "docs" folder create another special folder name "[...slug]".(slug is just a name but naming convention.).  
-3. inside "[...slug]" folder create "page.tsx" file.   
+we can add "not-found.tsx" page for some conditions in the route.    
 
-> src/app/docs/[...slug]/page.tsx   
-```ts
+3. for the "product" dynamic route add condition if productId more then 1000 then show the "NotFound" page.   
+```ts 
 import React from 'react';
+import { notFound } from 'next/navigation'; // + add
 
-const DocsPage: React.FC<> = () => {
-  return <h1>Docs home page</h1>;
+interface ProductPageProps {
+  params: {
+    productId: string;
+  };
 }
 
-export default DocsPage;
+const ProductPage: React.FC<ProductPageProps> = ({ params }) => {
+  if(parseInt(params.productId)>1000){ // + add
+    notFound();
+  }
+  return <h1>Product page product ID is {params.productId}</h1>;
+};
+
+export default ProductPage;
 ```
 
-show going with follwing links and show now "localhost:3000/docs/*" works with any url that have "docs" keyword.   
-```bash
-localhost:3000/docs
-localhost:3000/docs/test/concept2
-localhost:3000/docs/feature2/2/example/test
-```
-
-4. show how to get parameters from dynamic route using "Catch all Segments" feature.    
-   hare add diffenrent 
-> src/app/docs/[...slug]/page.tsx   
-```ts
+3.1 now add "not-found.tsx" page in to "[productId]" location.    
+>src/app/products/[productId]/not-found.tsx
+```ts  
 import React from 'react';
+import { notFound } from 'next/navigation';
 
-interface DocsPageProps {
-  params:{
-      slug: string[];
-  }
+interface ProductPageProps {
+  params: {
+    productId: string;
+  };
 }
 
-const DocsPage: React.FC<DocsPageProps> = ({params}) => {
-  
-  if(params.slug.length === 2){
-      return <h1>Viewing docs for feature {params.slug[0]} and concept {params.slug[1]}</h1>;
-  }else if (params.slug.length === 1) {
-      return <h1>Viewing docs for feature {params.slug[0]}</h1>;
-  }else {
-      return <h1>Viewing docs home page</h1>;
+const ProductPage: React.FC<ProductPageProps> = ({ params }) => {
+  if(parseInt(params.productId)>1000){
+    notFound();
   }
-}
+  return <h1>Product page product ID is {params.productId}</h1>;
+};
 
-export default DocsPage;
+export default ProductPage;
 ```
-
-5. In above exmaple for "localhost:3000/docs" show 404 screen. for avoid that we can use another square brackets for [...slug] folder.   
-src/app/dosc/[[...slug]]/page.tsx  
+3.2 now check following url on the web browser.   
+```bash 
+http://localhost:3000/products/10
+http://localhost:3000/products/10000
+```
