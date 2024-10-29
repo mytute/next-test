@@ -1,52 +1,33 @@
-# 11 File Colocation.    
+# 12 Private Folders    
 
-As we know nextjs uses a file system based router eacch folder represents a route segment mapped to a corresponding segment in the URL path. However it's important to note that a route isn't publicky accessible until a page.tsx file is added to the respective route segment. 
+* A private folder indicate that it is a private implementation detail and should not be considered by the routing system.   
+* The folder and all its subfolders are excluded from routing.   
 
-1. With in the app folder create a new folder named "dashboard".   
-2. Inside the "dashboard" folder add new file nemaed "line-chart.tsx".   
+* Prefix the folder name with an undersore.   
 
->src/app/dashboard/line-chart.tsx   
+1. inside the app folder create a new folder call "_lib". In this folder you can have utility functions such as format-date.ts
+
+2. inside the "_lib" folder create file named "page.tsx".  
+>src/app/_lib/page.tsx   
 ```ts 
-import React from "react";
+import React from 'react';
 
-const LineChart:React.FC = () => {
-
-  return (
-    <h1>Line Chart page</h1>
-  );
-
-}
-
-export default LineChart;
-```
-
-3. check the following url is working or not.   
-```bash
-localhost:3000/dashboard
-```
-
-dashboard.tsx file publicly not accessible until page.tsx file is define. Even when a route become publicaly accessible only the content return by page.tsx is sent to the client.   
-
-#### page.tsx content returned must be default exported react component.   
-
-4. create page.tsx inside dashboard folder but not default exporting the react component.    
->src/app/dashboard/page.tsx   
-```tsx 
-const Dashboard = () =>{
-    <h1>Dashboard home page</h1>
+const PrivateRoute () => {
+    return <h1>You cannot view this in the browser</h1>
 }
 ```
 
-5. show when we enter the "localhost:3000/dashboard" url route make error on borwser.   
-6. now make above page.tsx folder in following way. And show only "Dashboard" is displaying.       
-```tsx 
-const BarChart = () =>{
-    return <h1>Bar Chart</h1>
-}
+3. then go to above "PrivateRoute" ulr which is localhost:3000/_lib and show it now loading.  
+ 
+### Private Folders contd.    
 
-const Dashboard = () =>{
-    return <h1>Dashboard</h1>
-}
-export default Dashboard;
-```
+ 1. For seperating UI logic from routing logic.   
+ 2. For consistently organizing internal files across a project.   
+ 3. For sorting and grouping files in code editors.  
+ 2. For avoiding potential naming conflicts with future Next.js file conventions.   
+
+ note:  
+ If you want to include an undersore in URL segments, you can prefix the folder name with "%5F" which is the URL-encoded from an underscore.   
+
+ 
 
