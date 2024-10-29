@@ -17,7 +17,7 @@ const PrivateRoute () => {
 }
 ```
 
-3. then go to above "PrivateRoute" ulr which is localhost:3000/_lib and show it now loading.  
+3. then go to above "PrivateRoute" ulr which is localhost:3000/_lib and show it not loading.  
  
 ### Private Folders contd.    
 
