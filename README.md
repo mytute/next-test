@@ -1,33 +1,38 @@
-# 12 Private Folders    
+# 13 Route Groups       
+ 
+Allow us to logicallu group our routes and projet files without affecting the URL path structure.    
 
-* A private folder indicate that it is a private implementation detail and should not be considered by the routing system.   
-* The folder and all its subfolders are excluded from routing.   
+Let's implement authentication routes.   
+ - Register
+ - Login
+ - Forgut password   
 
-* Prefix the folder name with an undersore.   
+ for better experiancce one wayt to improve this experience is by organizing routes and projet files in to groups based on section or or intent.
 
-1. inside the app folder create a new folder call "_lib". In this folder you can have utility functions such as format-date.ts
+we can create "auth" folder in the "app" folder to contain all authentication related routes.   
 
-2. inside the "_lib" folder create file named "page.tsx".  
->src/app/_lib/page.tsx   
-```ts 
-import React from 'react';
+1. create "auth" folder and inside it create "register", "login", "forgot-password" folders and basic "page.tsx" fine inside each.   
 
-const PrivateRoute () => {
-    return <h1>You cannot view this in the browser</h1>
-}
+2. now go to broswer and show for each url of auth we need to add "/auth" segment that we dont want.   
+```bash 
+localhost:3000/auth/register
+localhost:3000/auth/login
+localhost:3000/auth/forgot-password
 ```
 
-3. then go to above "PrivateRoute" ulr which is localhost:3000/_lib and show it not loading.  
- 
-### Private Folders contd.    
+we can mark a folder as a route group to exlude it from the routes urls path.        
 
- 1. For seperating UI logic from routing logic.   
- 2. For consistently organizing internal files across a project.   
- 3. For sorting and grouping files in code editors.  
- 2. For avoiding potential naming conflicts with future Next.js file conventions.   
+3. to create route group simply wrap folrder's name in parenthesis.(rename)
+```bash 
+src/app/(auth)/register/page.tsx   
+src/app/(auth)/login/page.tsx   
+src/app/(auth)/forgot-password/page.tsx   
+```
+4. now check url in following way.    
 
- note:  
- If you want to include an undersore in URL segments, you can prefix the folder name with "%5F" which is the URL-encoded from an underscore.   
-
- 
+```bash 
+localhost:3000/register
+localhost:3000/login
+localhost:3000/forgot-password
+```
 
