@@ -1,78 +1,52 @@
-# 10 Not Found Page.       
+# 11 File Colocation.    
 
-when we enter url route on the browser we see the default 404 page.   
+As we know nextjs uses a file system based router eacch folder represents a route segment mapped to a corresponding segment in the URL path. However it's important to note that a route isn't publicky accessible until a page.tsx file is added to the respective route segment. 
 
-1. To create custom not-found page simply create a file named "not-found.tsx" in the app foleder.    
+1. With in the app folder create a new folder named "dashboard".   
+2. Inside the "dashboard" folder add new file nemaed "line-chart.tsx".   
 
->src/app/not-found.tsx   
+>src/app/dashboard/line-chart.tsx   
 ```ts 
 import React from "react";
- 
-const NotFound:React.FC = () => {
+
+const LineChart:React.FC = () => {
+
   return (
-    <>
-      <h2>Page not found</h2>
-      <p>Cound not find requested resource</p>
-    </>
-  )
+    <h1>Line Chart page</h1>
+  );
+
 }
 
-export default NotFound;
+export default LineChart;
 ```
 
-2. not goto following routes and check.   
-```bash 
-http://localhost:3000/products/1 # working route
-http://localhost:3000/products   # show custom 404 page
-http://localhost:3000/pro        # show custom 404 page
+3. check the following url is working or not.   
+```bash
+localhost:3000/dashboard
 ```
 
-we can add "not-found.tsx" page for some conditions in the route.    
+dashboard.tsx file publicly not accessible until page.tsx file is define. Even when a route become publicaly accessible only the content return by page.tsx is sent to the client.   
 
-3. for the "product" dynamic route add condition if productId more then 1000 then show the "NotFound" page.   
-```ts 
-import React from 'react';
-import { notFound } from 'next/navigation'; // + add
+#### page.tsx content returned must be default exported react component.   
 
-interface ProductPageProps {
-  params: {
-    productId: string;
-  };
+4. create page.tsx inside dashboard folder but not default exporting the react component.    
+>src/app/dashboard/page.tsx   
+```tsx 
+const Dashboard = () =>{
+    <h1>Dashboard home page</h1>
+}
+```
+
+5. show when we enter the "localhost:3000/dashboard" url route make error on borwser.   
+6. now make above page.tsx folder in following way. And show only "Dashboard" is displaying.       
+```tsx 
+const BarChart = () =>{
+    return <h1>Bar Chart</h1>
 }
 
-const ProductPage: React.FC<ProductPageProps> = ({ params }) => {
-  if(parseInt(params.productId)>1000){ // + add
-    notFound();
-  }
-  return <h1>Product page product ID is {params.productId}</h1>;
-};
-
-export default ProductPage;
-```
-
-3.1 now add "not-found.tsx" page in to "[productId]" location.    
->src/app/products/[productId]/not-found.tsx
-```ts  
-import React from 'react';
-import { notFound } from 'next/navigation';
-
-interface ProductPageProps {
-  params: {
-    productId: string;
-  };
+const Dashboard = () =>{
+    return <h1>Dashboard</h1>
 }
-
-const ProductPage: React.FC<ProductPageProps> = ({ params }) => {
-  if(parseInt(params.productId)>1000){
-    notFound();
-  }
-  return <h1>Product page product ID is {params.productId}</h1>;
-};
-
-export default ProductPage;
+export default Dashboard;
 ```
-3.2 now check following url on the web browser.   
-```bash 
-http://localhost:3000/products/10
-http://localhost:3000/products/10000
-```
+
