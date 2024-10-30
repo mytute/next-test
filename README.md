@@ -23,23 +23,28 @@ src/app/(auth)/forgot-password/page.tsx
 3. add "layout.tsx" file in to "(with-auth-layout)" folder.   
 >src/app/auth/(with-auth-layout)/layout.tsx   
 ```tsx 
-export default function AuthLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  return (
-    <html lang="en">
-      <body>
-        <header 
-          style={{
-              backgroundColor:"lightblue",
-              padding:"1rem"
-          }}
-        >
-          <p>Header</p>
-        </header>
-          {children}
-        <footer
-          style={{
+import React from 'react';
+
+interface AuthLayoutProps {
+  children:React.ReactNode
+}
+
+const AuthLayout:React.FC<AuthLayoutProps> = ({children}) => {
+    return (
+      <>
+        {children}
+        <h2>Feature Auth</h2>
+      </>
+    )
+}
+
+export default AuthLayout;
 ```
+
+4. now check only "login" and "register" route have additional layout.   
+```bash 
+src/app/(with-auth-layout)/(auth)/login/page.tsx
+src/app/(with-auth-layout)/(auth)/register/page.tsx
+src/app/(auth)/forgot-password/page.tsx
+```
+
