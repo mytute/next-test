@@ -1,32 +1,45 @@
-# 15 Nested Layouts   
+# 16 Route Group Layout    
 
-Layouts are UI components shared between multiple pages in an application.   
-Layout can be nested.  
+Route Group uses: To organize your project in a manner that doesn't affect the URL.   
+Route Group Layout: To selectively apply a layout to certain segments while leaving others unchanged.   
 
-1. inside "productId" folder create a new "layout.tsx" file. And copy-past simple react code.    
->src/app/produts/[productId]/layout.tsx  
-```tsx 
-import React from 'react';
-
-interface ProductDetailsLayoutProps {
-  children:React.ReactNode
-}
-
-const ProductDetailsLayout:React.FC<ProductDetailsLayoutProps> = ({children}) => {
-    return (
-      <>
-        {children}
-        <h2>Feature production</h2>
-      </>
-    )
-
-}
-
-export default ProductDetailsLayout;
+1. create group route call "auth".   
+```bash 
+src/app/(auth)/login/page.tsx
+src/app/(auth)/register/page.tsx
+src/app/(auth)/forgot-password/page.tsx
 ```
 
-2. next go to following route and check above layout only added to only "productId" page.      
+let's assume we want to add unique layout for only "login" and "register" page.   
+
+2. create "(with-auth-layout)" folder with brackets and put "login/page.tsx" and "register/page.tsx" inside it.    
+
 ```bash 
-http://localhost:3000/products/2
-http://localhost:3000
+src/app/(with-auth-layout)/(auth)/login/page.tsx
+src/app/(with-auth-layout)/(auth)/register/page.tsx
+src/app/(auth)/forgot-password/page.tsx
+```
+
+3. add "layout.tsx" file in to "(with-auth-layout)" folder.   
+>src/app/auth/(with-auth-layout)/layout.tsx   
+```tsx 
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body>
+        <header 
+          style={{
+              backgroundColor:"lightblue",
+              padding:"1rem"
+          }}
+        >
+          <p>Header</p>
+        </header>
+          {children}
+        <footer
+          style={{
 ```
