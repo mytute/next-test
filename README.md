@@ -1,50 +1,119 @@
-# 16 Route Group Layout    
+#  17 Routing Metadata.   
 
-Route Group uses: To organize your project in a manner that doesn't affect the URL.   
-Route Group Layout: To selectively apply a layout to certain segments while leaving others unchanged.   
+Ensuring proper search engine optimization(SEO) is crucial for increasing visibility and attracting users.   
 
-1. create group route call "auth".   
-```bash 
-src/app/(auth)/login/page.tsx
-src/app/(auth)/register/page.tsx
-src/app/(auth)/forgot-password/page.tsx
-```
+Next.js introduced the Metadata API which allows you to define metadata for each page.   
 
-let's assume we want to add unique layout for only "login" and "register" page.   
+Metadata ensures accurate and relevent information is displayed when your pages are shared or indexed.   
 
-2. create "(with-auth-layout)" folder with brackets and put "login/page.tsx" and "register/page.tsx" inside it.    
 
-```bash 
-src/app/(with-auth-layout)/(auth)/login/page.tsx
-src/app/(with-auth-layout)/(auth)/register/page.tsx
-src/app/(auth)/forgot-password/page.tsx
-```
+There are two methods to configure metadata in a "layout.tsx" or "page.tsx" files.  
+1. Export a static metadata object.  
+2. Export a dynamic generateMetadata function.   
 
-3. add "layout.tsx" file in to "(with-auth-layout)" folder.   
->src/app/auth/(with-auth-layout)/layout.tsx   
+### Metadata rules.   
+* Both layout.tsx and page.tsx files can export metadata. If defined in a layout, it applies to all pages in that layout, but if defined in a page, it applies only to that page.   
+
+* Metadata is read in order, from the root level down to the final page level.   
+
+* Whe there's metadata in multiple places for the same rote, they get combined but page metadata will replace layout metadata if they have the same properties.   
+
+### Export a static metadata object.    
+
+1. create "about" folder inside "app" folder and create "page.tsx" file inside it.   
+>src/app/about/page.tsx    
 ```tsx 
 import React from 'react';
 
-interface AuthLayoutProps {
-  children:React.ReactNode
+const About:React.FC = () => {
+    return <h1>About me</h1>
 }
 
-const AuthLayout:React.FC<AuthLayoutProps> = ({children}) => {
-    return (
-      <>
-        {children}
-        <h2>Feature Auth</h2>
-      </>
-    )
-}
-
-export default AuthLayout;
+export default About;
 ```
 
-4. now check only "login" and "register" route have additional layout.   
+2. define the metadata object in above component and set the title.   
+>src/app/about/page.tsx    
+```tsx 
+import React from 'react';
+
+export metadata = {
+  title: "About Nextjs" // this title overrite from root layout.tsx  
+}
+
+const About:React.FC = () => {
+    return <h1>About me</h1>
+}
+
+export default About;
+```
+
+3. check following route urls and check browser console "title" tag and "meta" tags.    
 ```bash 
-src/app/(with-auth-layout)/(auth)/login/page.tsx
-src/app/(with-auth-layout)/(auth)/register/page.tsx
-src/app/(auth)/forgot-password/page.tsx
+localhost:3000/ # this metadata getting from root layout.tsx   
+localhost:3000/about # this metadata getting about/page.tsx and root layout.tsx
 ```
+
+### Export a dynamic generateMetadata function.   
+
+Dynamic metadata set dynamic information such as the current route parameters external data or metadata in parent segments. To define dynamic metadata we export a generate metadata function that returns a metadata object from a layout or page.tsx file. Like product ID     
+
+4. create "product" dynamic route and add dynamic title metadata. 
+>src/app/products/[productId]/page.tsx   
+```tsx 
+import React from "react";
+import { Metadata } from "next";
+
+interface ProductDetailsProps {
+  params: {
+    productId: string;
+  }
+}
+
+const generateMetadata = ({params}:ProductDetailsProps):Metadata => {
+  return {
+    title: `Product ${params.productId}`
+  }
+}
+
+export { generateMetadata};
+
+const ProductDetails:React.FC<ProductDetailsProps> = ({params}) => {
+  return <h1>Details about product {params.productId}</h1>
+}
+
+export default ProductDetails;
+```
+
+4. convert above "generatedMetadata" function to async.   
+>src/app/products/[productId]/page.tsx   
+```tsx 
+import React from "react";
+import { Metadata } from "next";
+
+interface ProductDetailsProps {
+  params: {
+    productId: string;
+  }
+}
+
+const generateMetadata = async ({params}:ProductDetailsProps):Promise<Metadata> => {
+  const title:string = await new Promise((resolve)=>{
+    setTimeout(()=>{
+      resolve(`iPhone ${params.productId}`);
+    },3000)
+  })
+  return {
+    title: title  }
+}
+
+export { generateMetadata};
+
+const ProductDetails:React.FC<ProductDetailsProps> = ({params}) => {
+  return <h1>Details about product {params.productId}</h1>
+}
+
+export default ProductDetails;
+```
+
 
