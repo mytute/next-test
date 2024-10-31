@@ -1,76 +1,35 @@
-#  20 Active Links  
+#  21 Navigating Programmatically   
 
+Here we are looking how to navigate to the route by calling function and with out user clicking "Link" element.  
 
-1. from the previous tute make "login", "register" and "forgot-password" routes using loop.    
->src/app/(auth)/layout.tsx   
+1. create "order-product" folder inside it create "page.tsx" file.   
+>src/app/order-product/page.tsx    
 ```tsx 
-import Link from "next/link";
+"use client"; // to use react hook 
+import { useRouter } from "next/navigation"; // navigate by calling function   
 
-const navLinks = [
-  {name: "Register", href:"/register"},
-  {name: "Login", href:"/login"},
-  {name: "Forgot Password", href:"/forgot-password"},
-];
+const OrderProduct = () => {
 
-interface AuthLayoutProps {
-  children: {
-    children: React.ReactNode;
+  const router = useRouter();
+
+  const handleClick = () =>{
+    console.log("place your order.")
+    router.push("/"); // navigate to the definded path   
+    //router.replace();
+    //router.forward(); // same as browser forword button
+    //router.back(); // same as browser back button
   }
-}
-const AuthLayout:React.FC<AuthLayoutProps> = ({children}) => {
-   return (
-     <>
-       {navLinks.map(({name, href})=>{
-         return <Link href={href} key={name}>{name}</Link>
-       })}
-       {children}
-     </>
-   ) 
+
+  return (
+    <>
+      <h1>Order Product</h1>
+      <button onClick={handleClick}>Place Order</button>
+    </>
+  )
+
 }
 
-export default AuthLayout;
+export default OrderProduct;
 ```
 
-2. show how to add "active routes" with styles using "usePathname" react hook.    
-note: react hooks only can use nextjs client component only. so we need to convert following component to "client" component by add "use client" on the top of the file.   
->src/app/(auth)/layout.tsx   
-```tsx 
-"use client"; // add because hooks allow to use in client component only   
-import Link from "next/link";
-import { usePathname } from "next/navigation"; // to get current route url path 
-import "./styles.css" // import styles for that active route 
-
-const navLinks = [
-  {name: "Register", href:"/register"},
-  {name: "Login", href:"/login"},
-  {name: "Forgot Password", href:"/forgot-password"},
-];
-
-interface AuthLayoutProps {
-  children: {
-    children: React.ReactNode;
-  }
-}
-const AuthLayout:React.FC<AuthLayoutProps> = ({children}) => {
-  const pathName = usePathname(); // add
-   return (
-     <>
-       {navLinks.map(({name, href})=>{
-         const isActive = pathName === href; // add
-         return <Link href={href} key={name} className={isActive ? 'active': ''} >{name}</Link> // add
-       })}
-       {children}
-     </>
-   ) 
-}
-
-export default AuthLayout;
-```
->src/app/(auth)/styles.css   
-```css 
-.active {
-  font-weight: bold;
-  color: blue;
-  text-decoration: underline;
-}
-```
+ 
