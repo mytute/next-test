@@ -1,64 +1,76 @@
-#  19 Link Component Navigation.   
+#  20 Active Links  
 
-So far we manually entered the URLs in the browser's address bar to navigate to the different routes.  
-Users rely on UI elements like links to navigate.   
- * Click on the  
- * Through programmatic navigation after completing an action.   
 
-1. show how to navigating from the homepage to the blogpage on click of UI.   
-
-The "Link" component is a React component that extends the HTML "<a>" element, and it's the primary way to navigation between routes in Next.js   
-
->src/app/page.tsx
+1. from the previous tute make "login", "register" and "forgot-password" routes using loop.    
+>src/app/(auth)/layout.tsx   
 ```tsx 
-import Link from "next/link" // add
+import Link from "next/link";
 
-export default function Home () {
-  return (
-    <>
-      <h1>Home page</h1>
-      <Link href="/blog">Blog</Link> // add
-    </>
-  )
+const navLinks = [
+  {name: "Register", href:"/register"},
+  {name: "Login", href:"/login"},
+  {name: "Forgot Password", href:"/forgot-password"},
+];
+
+interface AuthLayoutProps {
+  children: {
+    children: React.ReactNode;
+  }
 }
+const AuthLayout:React.FC<AuthLayoutProps> = ({children}) => {
+   return (
+     <>
+       {navLinks.map(({name, href})=>{
+         return <Link href={href} key={name}>{name}</Link>
+       })}
+       {children}
+     </>
+   ) 
+}
+
+export default AuthLayout;
 ```
 
-2. show how to navigate dynamic routes.    
->src/app/page.tsx  
+2. show how to add "active routes" with styles using "usePathname" react hook.    
+note: react hooks only can use nextjs client component only. so we need to convert following component to "client" component by add "use client" on the top of the file.   
+>src/app/(auth)/layout.tsx   
 ```tsx 
-import Link from "next/link"
+"use client"; // add because hooks allow to use in client component only   
+import Link from "next/link";
+import { usePathname } from "next/navigation"; // to get current route url path 
+import "./styles.css" // import styles for that active route 
 
-export default function Home () {
-  const productId = 100; // by using variable and string interpolation.   
-  return (
-    <>
-      <h1>Home page</h1>
-     <Link href="/blog">Blog</Link>
-     <h1><Link href="/products/1">Product detail 1</Link></h1>
-     <h1><Link href="/products/2">Product detail 2</Link></h1>
-     <h1><Link href=`/products/${productId}`>Product detail `${productId}`</Link></h1>
-    </>
-  )
+const navLinks = [
+  {name: "Register", href:"/register"},
+  {name: "Login", href:"/login"},
+  {name: "Forgot Password", href:"/forgot-password"},
+];
+
+interface AuthLayoutProps {
+  children: {
+    children: React.ReactNode;
+  }
 }
+const AuthLayout:React.FC<AuthLayoutProps> = ({children}) => {
+  const pathName = usePathname(); // add
+   return (
+     <>
+       {navLinks.map(({name, href})=>{
+         const isActive = pathName === href; // add
+         return <Link href={href} key={name} className={isActive ? 'active': ''} >{name}</Link> // add
+       })}
+       {children}
+     </>
+   ) 
+}
+
+export default AuthLayout;
 ```
-
-3. show how to "replace" prop replaces the current history state instead of adding a new URL to this stag.  
-
-when we put "replace" props on "Link" then by clicking browser back button it will navigate to latest previous route that not have current route.   
-
-```tsx 
-import Link from "next/link"
-
-export default function Home () {
-  const productId = 100; // by using variable and string interpolation.   
-  return (
-    <>
-      <h1>Home page</h1>
-     <Link href="/blog">Blog</Link>
-     <h1><Link href="/products/1">Product detail 1</Link></h1>
-     <h1><Link href="/products/2">Product detail 2</Link></h1>
-     <h1><Link href="/products/3" replace>Product detail 3</Link></h1> // add here 
-    </>
-  )
+>src/app/(auth)/styles.css   
+```css 
+.active {
+  font-weight: bold;
+  color: blue;
+  text-decoration: underline;
 }
 ```
