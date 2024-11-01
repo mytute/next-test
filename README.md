@@ -1,53 +1,25 @@
-# 22 Templates   
+# 23 Loading UI  
 
-Templates are similar to layout in that they wrap each child or page.    
+This file allows us to create loading states that are dislayed to users while a specific route segment's content is loading.  
 
-But, with templates, when a user navigates between routes that share a template, a new instance of the component is mounted, DOM emelemts are recreated, state not preserved, and effects are re-synchronized.  
+The laoding state appears immediatly upon navigation, givin users the assurance that the application is responsive and actively loading content.  
 
-A template can be defined by exporting a default React component from a "template.js" or "template.tsx" file.   
+To create loading simply we need to add a loading.tsx file to the designated folder.   
 
-Simlar to layout, template alson should accept a children prop which will render the nested segments in the route.    
-
-1. to auth layout add "input" element and show input value not chaning while user change the route "login" to "register" and "register" to "login".   
->src/app/(auth)/layout.tsx
+1. create laoding page for blog route and show loading component appears before "blog/page.tsx" loading.   
+>src/app/blog/loading.tsx.  
 ```tsx 
-"use client";
-import React, { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import "./styles.css";
+import React from "react";
 
-interface AuthLayoutProps {
-  children : React.ReactNode
+const Loading:React.FC = () => {
+  return <h1>Loading..</h1>
 }
 
-const navLinks = [
-  {name:"Login", href:"/login"},
-  {name:"Register", href:"/register"},
-];
-
-const AuthLayout:React.FC<AuthLayoutProps> = ({children}) => {
-  const route = usePathname();
-  const [name, setName] = useState(""); // add
-  return (
-    <>
-    <div>
-      <label>Name:</label> // add 
-      <input type="text" onChange={(e)=>setName(e.target.value)} value={name}/> // add
-    </div>
-    {navLinks.map(link=> {
-      const isActive = route.startsWith(link.href);
-      return <Link href={link.href} key={link.name} className={isActive ? 'active' : ''}>{link.name}</Link>
-    })}
-    {children}
-    </>
-  )
-}
-
-export default AuthLayout;
+export default Loading;
 ```
 
-2. just change the above file name "src/app/(auth)/layout.tsx" to "src/app/(auth)/template.tsx" and check above behaviour and check input value changing or not.   
-
-In nextjs can have both "layout.tsx" and "template.tsx" file together. And then It render as following order.   
-"layout.tsx" > "template.tsx" > "page.tsx"  
+### lading.tsx Benifits   
+1. you can display the loading state as soon as a user navigates to a new route.  
+The immediate feedback reassures users that their action has been acknowledged, reduces perceived loading times. and makes the appliation more responsive.  
+2. Next.js allows the creation of shared layouts that remain interactive while new route segments are loading.   
+Users can continue interaction with certain parts of the application, such as a navigation menu or sidebar, even if the main content is still being fetched.  
