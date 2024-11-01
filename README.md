@@ -1,35 +1,53 @@
-#  21 Navigating Programmatically   
+# 22 Templates   
 
-Here we are looking how to navigate to the route by calling function and with out user clicking "Link" element.  
+Templates are similar to layout in that they wrap each child or page.    
 
-1. create "order-product" folder inside it create "page.tsx" file.   
->src/app/order-product/page.tsx    
+But, with templates, when a user navigates between routes that share a template, a new instance of the component is mounted, DOM emelemts are recreated, state not preserved, and effects are re-synchronized.  
+
+A template can be defined by exporting a default React component from a "template.js" or "template.tsx" file.   
+
+Simlar to layout, template alson should accept a children prop which will render the nested segments in the route.    
+
+1. to auth layout add "input" element and show input value not chaning while user change the route "login" to "register" and "register" to "login".   
+>src/app/(auth)/layout.tsx
 ```tsx 
-"use client"; // to use react hook 
-import { useRouter } from "next/navigation"; // navigate by calling function   
+"use client";
+import React, { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import "./styles.css";
 
-const OrderProduct = () => {
-
-  const router = useRouter();
-
-  const handleClick = () =>{
-    console.log("place your order.")
-    router.push("/"); // navigate to the definded path   
-    //router.replace();
-    //router.forward(); // same as browser forword button
-    //router.back(); // same as browser back button
-  }
-
-  return (
-    <>
-      <h1>Order Product</h1>
-      <button onClick={handleClick}>Place Order</button>
-    </>
-  )
-
+interface AuthLayoutProps {
+  children : React.ReactNode
 }
 
-export default OrderProduct;
+const navLinks = [
+  {name:"Login", href:"/login"},
+  {name:"Register", href:"/register"},
+];
+
+const AuthLayout:React.FC<AuthLayoutProps> = ({children}) => {
+  const route = usePathname();
+  const [name, setName] = useState(""); // add
+  return (
+    <>
+    <div>
+      <label>Name:</label> // add 
+      <input type="text" onChange={(e)=>setName(e.target.value)} value={name}/> // add
+    </div>
+    {navLinks.map(link=> {
+      const isActive = route.startsWith(link.href);
+      return <Link href={link.href} key={link.name} className={isActive ? 'active' : ''}>{link.name}</Link>
+    })}
+    {children}
+    </>
+  )
+}
+
+export default AuthLayout;
 ```
 
- 
+2. just change the above file name "src/app/(auth)/layout.tsx" to "src/app/(auth)/template.tsx" and check above behaviour and check input value changing or not.   
+
+In nextjs can have both "layout.tsx" and "template.tsx" file together. And then It render as following order.   
+"layout.tsx" > "template.tsx" > "page.tsx"  
