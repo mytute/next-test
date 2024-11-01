@@ -1,25 +1,49 @@
-# 23 Loading UI  
+# 24 Error Handling  
 
-This file allows us to create loading states that are dislayed to users while a specific route segment's content is loading.  
+Now we are going to learn another specail file call "error.tsx" in nextjs folder structure.   
 
-The laoding state appears immediatly upon navigation, givin users the assurance that the application is responsive and actively loading content.  
+1. for "blog" add function for return random value of 1 and 0 and if it is equal to 1 then throw a error and keep refresh "localhost:3000/blog" route until it get error page.      
 
-To create loading simply we need to add a loading.tsx file to the designated folder.   
-
-1. create laoding page for blog route and show loading component appears before "blog/page.tsx" loading.   
->src/app/blog/loading.tsx.  
+>src/app/blog/page.tsx   
 ```tsx 
-import React from "react";
+import React from 'react';
 
-const Loading:React.FC = () => {
-  return <h1>Loading..</h1>
+function getRandomInt(count:number) {
+  console.log(Math.random());
+  return Math.floor(Math.random()*count);
 }
 
-export default Loading;
-```
+const BlogPage: React.FC = () => {
+  const random = getRandomInt(2);
+  if(random ===1){
+    throw new Error("Error loading reviews!");
+  }
+  return (
+    <>
+      <h1>Blog Page</h1> 
+    </>
+  )
+}
 
-### lading.tsx Benifits   
-1. you can display the loading state as soon as a user navigates to a new route.  
-The immediate feedback reassures users that their action has been acknowledged, reduces perceived loading times. and makes the appliation more responsive.  
-2. Next.js allows the creation of shared layouts that remain interactive while new route segments are loading.   
-Users can continue interaction with certain parts of the application, such as a navigation menu or sidebar, even if the main content is still being fetched.  
+export default BlogPage;
+``` 
+
+2. to above error of the main page make error handling using "error.tsx" file. Create "error.tsx" file inside "blog" folder.   
+>src/app/blog/error.tsx  
+```tsx 
+"use client"
+import React from "react";
+
+interface ErrorBoundaryProps {
+  error:{
+    message:string;
+  };
+}
+const ErrorBoundary:React.FC<ErrorBoundaryProps> = ({error}) =>{
+  return <div>{error.message}</div>
+}
+
+export default ErrorBoundary;
+``` 
+
+
