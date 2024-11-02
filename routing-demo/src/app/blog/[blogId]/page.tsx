@@ -5,7 +5,13 @@ function getRandomInt(count:number) {
   return Math.floor(Math.random()*count);
 }
 
-const BlogPage: React.FC = () => {
+interface BlogPageProps {
+  params:{
+    blogId: string;
+  }
+}
+
+const BlogPage: React.FC<BlogPageProps> = ({params}) => {
   const random = getRandomInt(2);
   console.error(">>>>>", random);
   if(random ===1){
@@ -13,7 +19,7 @@ const BlogPage: React.FC = () => {
   }
   return (
     <>
-      <h1>Blog Page {random}</h1> 
+      <h1>Blog Page {params.blogId}</h1> 
     </>
   )
 }
