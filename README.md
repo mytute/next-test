@@ -1,125 +1,79 @@
-# 28 Parallel Routes.  
+# 29 Unmatched Routes   
 
-1. show me how normal way to create "dashboard".   
-1.1 create folder call "dashboard" and inside it create a "layout.tsx" file.  
-```tsx 
-import React from 'react'; 
-imoprt Notifiaction from './components/notifications';
-imoprt Revenue from './components/revenue';
-imoprt User from './components/users';
+Sub Navigation is one of the benefit using parallel routes.    
 
-interface DashBoardLayoutProps {
-    children:React.ReactNode;
-}
-
-const DashBoardLayout:React.FC<DashBoardLayoutProps> = ({children}) =>{
-    return (
-      <>
-        {children}
-        <Notification/>
-        <Revenue />
-        <User/>
-      </>
-    )
-}
-```
-
-In above way we have to create component folder and import it's component in to "layout.tsx" folder. Instead of can we automatiaclly pass components in to "layout.tsx" folder.? yes we can do it with Parallel routes in Nest.js.   
- 
-Parallel routes in Next.js are defined using a feature known as slots.   
-Slots help structure our content in a modular fashion.  
-To define a slot, we use the '@folder' naming convention.   
-Each slot is then passed as a prop to its corresponding 'layout' file.   
-
-### folder structure.   
->app 
-  >dashboard 
-   >@notifications 
-     >page.tsx  
-   >@revenue  
-     >page.tsx  
-   >@users   
-     >page.tsx  
- 
-
-2. in the "dashboard" folder create "@notifications" folder and inside it create "page.tsx".   
->src/app/dashboard/@notifications/page.tsx   
-```tsx 
+1. add navigation link in "@notification/page.tsx" file to navigate archive notification view.  
+>src/app/dashboard/@notification/page.tsx  
+```tsx
+import Link from "next/link";
 import React from "react";
 
 const Notification:React.FC = () => {
-  return <h1>Notification Page</h1>
-}
-
-export default Notification;
-``` 
-
-2. do the same for "revenue" and "users".   
->src/app/dashboard/@revenue/page.tsx   
-```tsx 
-import React from "react";
-
-const Revenue:React.FC = () => {
-  return <h1>Revenue Page</h1>
-}
-
-export default Revenue;
-``` 
-
->src/app/dashboard/@users/page.tsx   
-```tsx 
-import React from "react";
-
-const User:React.FC = () => {
-  return <h1>User Page</h1>
-}
-
-export default User;
-``` 
-
-Each slot is automatically pass to the "layout.tsx" file component as a prop which we can then use to structure the dashboard page.   
-
-3. in the dashboard "layout.tsx" file import above component as props.    
->src/app/dashboard/layout.tsx  
-```tsx 
-import React from "react";
-
-interface DashboardLayoutProps {
-  children: React.ReactNode;
-  notification: React.ReactNode;
-  users: React.ReactNode;
-  revenue: React.ReactNode;
-}
-const DashboardLayout:React.FC<DashboardLayoutProps> = ({
-  children,
-  notification,
-  users,
-  revenue
-}) => {
   return (
     <>
-      <div>{children}</div>
-      <div>{notification}</div>
-      <div>{revenue}</div>
-      <div>{users}</div>
+      <h1>Notification Page</h1>
+      <Link href={"dashboard/archived"}>Archived</Link>
+    </>
+  )}
+
+export default Notification;
+```
+
+2. then create normal "archived/page.tsx" file in the "@notification" folder.   
+>src/app/dashboard/@notification/archived/page.tsx   
+```tsx 
+import Link from "next/link";
+import React from "react";
+
+const ArchivedNotifications = () => {
+  return (
+    <>
+      <div>Archived Notifications</div>
+      <Link href={"/dashboard"}> Default</Link>
     </>
   )
 }
 
-export default DashboardLayout;
-```
-4. show when we use "@folder" naming convention we no longer to access following route as before.   
-```bash 
-localhost:3000/dashboard/@users
-localhost:3000/dashboard/@notifications
-localhost:3000/dashboard/@revenue
+export default ArchivedNotifications;
 ```
 
-### Parallel Routes Benifits   
+here when we click "Archived" link on the "notification" view it will change "default" notification view. when we click on "default" view it will change to "Archived" view. So sub navigation working as expected.      
 
-* A clear benifit of parallel route is their ability to split a single layout into various slots, making the code more manageable.  
-* Independent route handling.  
-* Sub-navigation. 
+but if you refresh the browser at url route "localhost:3000/dashboard/archived" it will show "404" error. To prevent that we need to add "default.tsx" files to the "dashboard" and "revenue" and "users" routes(folders).  
 
-explanation : https://youtu.be/8I5-OTNOni0?list=PLC3y8-rFHvwjOKd6gdf4QtV1uYNiQnruI
+The "default.tsx" file in Next.js serves as a fallback to render content when the framwork cannot retrieve a slot's active state from the current URL.   
 
+You have complate freedom to define the UI for unmatched routes: you can either mirror the content found in page.tsx or craft an entirely custom view.   
+
+3. create "default.tsx" in "revenue" and "users" folder.   
+>src/app/dashboard/@revenue/default.tsx  
+```tsx 
+import React from "react";
+
+const DefaultRevenue:React.FC = () => {
+  return <h1>Default Revenue Page</h1>
+}
+
+export default DefaultRevenue;
+```
+>src/app/dashboard/@users/default.tsx  
+```tsx 
+import React from "react";
+
+const DefaultUser:React.FC = () => {
+  return <h1>Default User Page</h1>
+}
+
+export default DefaultUser;
+```
+
+>src/app/dashboard/default.tsx   
+```tsx 
+import React from "react";
+
+const DefaultDashBoard:React.FC = () =>{
+  return <h1>Dashboard Page</h1>
+}
+
+export default DefaultDashBoard;
+```
