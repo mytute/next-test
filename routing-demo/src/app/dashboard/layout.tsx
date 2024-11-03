@@ -5,19 +5,28 @@ interface DashboardLayoutProps {
   notification: React.ReactNode;
   users: React.ReactNode;
   revenue: React.ReactNode;
+  login: React.ReactNode; // add
 }
 const DashboardLayout:React.FC<DashboardLayoutProps> = ({
   children,
   notification,
   users,
-  revenue
+  revenue,
+  login // add
 }) => {
+  const isLoggedIn = false;
   return (
     <>
-      <div>{children}</div>
-      <div>{notification}</div>
-      <div>{revenue}</div>
-      <div>{users}</div>
+      {isLoggedIn ? (
+        <>
+        <div>{children}</div>
+        <div>{notification}</div>
+        <div>{revenue}</div>
+        <div>{users}</div>
+        </>
+      ) 
+       : (login)
+      } 
     </>
   )
 }
