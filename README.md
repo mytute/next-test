@@ -1,19 +1,17 @@
-# 37 Handlling PATCH Request   
-
+# 38 Handling DELETE Request   
 patch reqeust applies partial midifications to a resource.   
 
-1. show how to update comment that send comment id by frontend.   
+1. show how to delete comment that send comment id by frontend.   
 >src/app/comments/[id]/route.ts  
 ```tsx 
 import { comments } from "../data";
 
-export async function PATCH(request:Request, {params}:{params:{id:string}}) {
-  const body = await request.json();
-  const { text } = body;
+export async function DELETE(_request:Request, {params}:{params:{id:string}}) {
   const index = comments.findIndex(comment=> comment.id === parseInt(params.id))
-  comments[index] = text; 
-  return Response.json(comments[index]);
+  const deletedComment = comments[index];
+  comments.splice(index,1);
+  return Response.json(deletedComment);
 }
 ``` 
 
-2. test above code user "localhost:3000/comments/3". this will return updated comment with it's id. not to add body to the patch request.   
+2. test above code user "localhost:3000/comments/3". this will return deleted comment with it's id. Here we no need to add request body to postman.    
