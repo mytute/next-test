@@ -1,70 +1,58 @@
-# 41 Headers in Route Handlers  
+# 42 Cookies in Route Handlers  
 
-### Headers in Route Handlers   
+Cookies are small pieces of data that a server sends to a user's web browser.  
 
-HTTP headers respresent the metadata associated with an API request and response.    
+The browser may store the cookies and send it back to the same server with later requests.  
 
-### Request Headers   
-These are sent by the client, such as a web browser, to the server. They contain essential information about the request, which helps the server understand and process it correctly.   
+Cookies are mainly used for three purposes.  
+* Sessin management like login and shopping carts.  
+* Personalization like user preferences and themes.  
+* Tracking like recording and analyzing user behavior.  
 
-"User-Agent" which identifies the browser and operating system to the server.  
-"Accept" which indicates the content types like text, video, or image formats that the client can process.  
-"Authorization" header used by the client to authenticate it self to the server.   
-
-### Response Headers   
-These are sent back from the server to the client. They provide information about the server and the data being sent in the response.   
-"Content-Type" header which indicates the media type of the response. It tells the client waht the data type of the returned content is, such as text/html for HTML documents, application/json for JSON data, etc.  
-
-
-1. in the "profile/api/route.ts" file show how to read "Authorization" request header when you add that header key to postman.   
->src/app/profile/api/route.ts  
-```tsx 
-import { NextRequest } from "next/server"; // add
-
-export async function GET(request: NextRequest) {
-  const requestHeaders = new Headers(request.headers); // add
-  console.log(requestHeaders.get("Authorization")); // add
-  return new Response("Profile API data");
-}
-```
-
-> Headers   
-```bash 
-Authorization : Bearer 1234
-Accept : /*/ 
-User-Agent : linux windows computer
-```
-
-2. do the same above header reading with "next/headers" module.   
-```tsx 
-import { NextRequest } from "next/server";
-import { headers } from "next/headers"; // add
-
-export async function GET(request: NextRequest) {
-  //const requestHeaders = new Headers(request.headers);
-  const headerList = headers(); // add
-  //console.log(requestHeaders.get("Authorization"));
-  console.log(headerList.get("Authorization")); // add
-  return new Response("Profile API data");
-}
-```
-
-Returned headers are readonly. To set headers you need to return a new response with the new headers.  
-
-3. convert above route handler request type in to html.   
+1. show how to set/get cookies to the "profile" route handler.   
+>src/app/profile/api/route.ts   
 ```tsx 
 import { NextRequest } from "next/server";
 import { headers } from "next/headers";
 
 export async function GET(request: NextRequest) {
   const headerList = headers();
+  const theme = request.cookies.get("theme"); // add read cookie 
+  console.log(theme);
   console.log(headerList.get("Authorization"));
   return new Response("<h1>Profile API data</h1>", {
     headers: {
       "Content-Type": "text/html",
+      "Set-Cookie": "theme=dark" // add set cookie
     }
   })
+
+}
+``` 
+you can test set cookie from "postman" in "Cookies" tab and set cookie using above code console log.   this in  
+
+2. show set and get cookies using the cookies function provided by nextjs   
+
+```tsx 
+import { NextRequest } from "next/server";
+import { headers, cookies } from "next/headers"; // update here
+
+export async function GET(request: NextRequest) {
+  const headerList = headers();
+
+  cookies().set("resultPerPage", "20"); // add
+  console.log(cookies().get("resultPerPage")); // add
+
+  const theme = request.cookies.get("theme");
+  console.log(theme);
+  console.log(headerList.get("Authorization"));
+  return new Response("<h1>Profile API data</h1>", {
+    headers: {
+      "Content-Type": "text/html",
+      "Set-Cookie": "theme=dark"
+    }
+  })
+
 }
 ```
-
 
