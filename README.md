@@ -1,6 +1,6 @@
 # 35 Handling POST Request    
 
-1. show how to create post request  
+1. show how to create post request    
 >src/app/comments/data.ts  
 ```tsx 
 // data.ts is not naming convention of nextjs   
