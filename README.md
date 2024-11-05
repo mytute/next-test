@@ -1,58 +1,34 @@
-# 42 Cookies in Route Handlers  
+# 43 Caching in Route Handlers  
 
-Cookies are small pieces of data that a server sends to a user's web browser.  
+Route Handlers are cached by default when using the GET method with the Response object in Next.js   
 
-The browser may store the cookies and send it back to the same server with later requests.  
+How to opt out of caching ? because some time we don't need caching.  
+ * dynamic mode in Segment Config Option.  
 
-Cookies are mainly used for three purposes.  
-* Sessin management like login and shopping carts.  
-* Personalization like user preferences and themes.  
-* Tracking like recording and analyzing user behavior.  
-
-1. show how to set/get cookies to the "profile" route handler.   
->src/app/profile/api/route.ts   
-```tsx 
-import { NextRequest } from "next/server";
-import { headers } from "next/headers";
-
-export async function GET(request: NextRequest) {
-  const headerList = headers();
-  const theme = request.cookies.get("theme"); // add read cookie 
-  console.log(theme);
-  console.log(headerList.get("Authorization"));
-  return new Response("<h1>Profile API data</h1>", {
-    headers: {
-      "Content-Type": "text/html",
-      "Set-Cookie": "theme=dark" // add set cookie
-    }
+ 1. create "src/app/time/route.ts" route handler and return current time using GET methos. And show for in "development" mode it show updated value but in "production" it not updatgin because of caching.   
+ >src/app/time/route.ts  
+```ts 
+export async function GET() {
+  return Response.json({
+    time:new Date().toLocaleTimeString(),
   })
-
-}
-``` 
-you can test set cookie from "postman" in "Cookies" tab and set cookie using above code console log.   this in  
-
-2. show set and get cookies using the cookies function provided by nextjs   
-
-```tsx 
-import { NextRequest } from "next/server";
-import { headers, cookies } from "next/headers"; // update here
-
-export async function GET(request: NextRequest) {
-  const headerList = headers();
-
-  cookies().set("resultPerPage", "20"); // add
-  console.log(cookies().get("resultPerPage")); // add
-
-  const theme = request.cookies.get("theme");
-  console.log(theme);
-  console.log(headerList.get("Authorization"));
-  return new Response("<h1>Profile API data</h1>", {
-    headers: {
-      "Content-Type": "text/html",
-      "Set-Cookie": "theme=dark"
-    }
-  })
-
 }
 ```
 
+for build and run the Nextjs application.  
+```bash 
+$ npm run build  
+$ npm run start
+```
+
+2. show how to update time even it on production.  
+ >src/app/time/route.ts  
+```ts 
+export const dynamic = "force-dynamic"; // default = "auto"
+
+export async function GET() {
+  return Response.json({
+    time:new Date().toLocaleTimeString(),
+  })
+}
+``` 
