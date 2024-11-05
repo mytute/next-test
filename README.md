@@ -1,47 +1,21 @@
-# 35 Handling POST Request    
+# 36 Dynamic Route Handlers   
 
-1. show how to create post request    
->src/app/comments/data.ts  
+
+next we need understand how to handle "patch" and "delete" requests. This is different than GET and POST because we need to comment whether updating or deleting in the comment. Because we need to pass some dynamic value like "id" that which one delete or update. 
+
+let's see how to handle dynamic route handler first.   
+
+1. create "src/app/comments/[id]/route.ts" to show how to received only one value passing it's "id" number.     
+>src/app/comments/[id]/route.ts   
 ```tsx 
-// data.ts is not naming convention of nextjs   
-export const comments = [
-  {
-    id:1,
-    text: "This is the first comment"
-  },
-  {
-    id:2,
-    text: "This is the second comment"
-  },
-  {
-    id:3,
-    text: "This is the third comment"
-  }
-];
-```
+import { comments } from "../data";
 
->src/app/comments/route.ts  
-```tsx 
-import { comments } from "./data";
-
-export async function POST(request: Request) {
-  const comment = await request.json();
-  const newComment = {
-    id:comments.length+1,
-    text:comment.text,
-  };
-  comments.push(newComment);
-  return new Response(JSON.stringify(newComment), {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    status:201
-  })  
+export async function GET(_request:Request, {params}:{params:{id:string}}) {
+  const comment = comments.find(comment=> comment.id === parseInt(params.id));
+  return Response.json(comment);
 }
 ```
-
-
-
+note: here in the code we put "_" before "request" for identify it not use.  
 
 
 
