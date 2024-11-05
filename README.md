@@ -1,6 +1,6 @@
-# 34 Handling GET Request  
+# 35 Handling POST Request    
 
-1. create files name "src/app/comments/data.ts" and "src/app/comments/route.ts" and in "data.ts" file insert list of data that can return as json in the "route.ts" file.     
+1. show how to create post request  
 >src/app/comments/data.ts  
 ```tsx 
 // data.ts is not naming convention of nextjs   
@@ -24,12 +24,22 @@ export const comments = [
 ```tsx 
 import { comments } from "./data";
 
-export async function GET() {
-  return Response.json(comments);
+export async function POST(request: Request) {
+  const comment = await request.json();
+  const newComment = {
+    id:comments.length+1,
+    text:comment.text,
+  };
+  comments.push(newComment);
+  return new Response(JSON.stringify(newComment), {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    status:201
+  })  
 }
 ```
 
-2. check the results on "localhost:3000/comments" route.  
 
 
 
