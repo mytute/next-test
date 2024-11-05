@@ -1,23 +1,19 @@
-# 36 Dynamic Route Handlers   
+# 37 Handlling PATCH Request   
 
+patch reqeust applies partial midifications to a resource.   
 
-next we need understand how to handle "patch" and "delete" requests. This is different than GET and POST because we need to comment whether updating or deleting in the comment. Because we need to pass some dynamic value like "id" that which one delete or update. 
-
-let's see how to handle dynamic route handler first.   
-
-1. create "src/app/comments/[id]/route.ts" to show how to received only one value passing it's "id" number.     
->src/app/comments/[id]/route.ts   
+1. show how to update comment that send comment id by frontend.   
+>src/app/comments/[id]/route.ts  
 ```tsx 
 import { comments } from "../data";
 
-export async function GET(_request:Request, {params}:{params:{id:string}}) {
-  const comment = comments.find(comment=> comment.id === parseInt(params.id));
-  return Response.json(comment);
+export async function PATCH(request:Request, {params}:{params:{id:string}}) {
+  const body = await request.json();
+  const { text } = body;
+  const index = comments.findIndex(comment=> comment.id === parseInt(params.id))
+  comments[index] = text; 
+  return Response.json(comments[index]);
 }
-```
-note: here in the code we put "_" before "request" for identify it not use.  
+``` 
 
-
-
-
-
+2. test above code user "localhost:3000/comments/3". this will return updated comment with it's id. not to add body to the patch request.   
