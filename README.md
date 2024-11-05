@@ -1,17 +1,31 @@
-# 38 Handling DELETE Request   
-patch reqeust applies partial midifications to a resource.   
+# 39 URL Query Parameters   
 
-1. show how to delete comment that send comment id by frontend.   
->src/app/comments/[id]/route.ts  
+If we want to filter comments array based on a specific query. For example we need to query that return item that "text" string includes "first" word.   
+```bash 
+localhost:3000/comments?query=first
+```
+
+since we can grap query parameter from the request using nextjs function we no need to put filter "GET" function inside "[id]" folder. just we can add it to "src/app/comments/route.ts"  
+
+1. update following "GET" route handle function for filter query.    
+>src/app/comments/route.ts  
 ```tsx 
-import { comments } from "../data";
+import { comments } from "./data";
 
-export async function DELETE(_request:Request, {params}:{params:{id:string}}) {
-  const index = comments.findIndex(comment=> comment.id === parseInt(params.id))
-  const deletedComment = comments[index];
-  comments.splice(index,1);
-  return Response.json(deletedComment);
+export async function GET() {
+  return Response.json(comments);
 }
-``` 
+```
+```tsx 
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const query = searchParams.get("query");
+  const filterComments = query && comments.filter(comment=> comment.text.includes(query));
+  return Response.json(filterComments);
+}
+```
+2. to test above filter   
+```bash 
+localhost:3000/comments?query=ir
+```
 
-2. test above code user "localhost:3000/comments/3". this will return deleted comment with it's id. Here we no need to add request body to postman.    
