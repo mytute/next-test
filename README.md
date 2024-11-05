@@ -3,7 +3,10 @@
 Route Handlers are cached by default when using the GET method with the Response object in Next.js   
 
 How to opt out of caching ? because some time we don't need caching.  
- * dynamic mode in Segment Config Option.  
+ * dynamic mode in Segment Config Option. // only showing here.    
+ * using the Request object with GET method.  
+ * employing dynamic functions like headers() and cookies().    
+ * using HTTP method other then GET.  
 
  1. create "src/app/time/route.ts" route handler and return current time using GET methos. And show for in "development" mode it show updated value but in "production" it not updatgin because of caching.   
  >src/app/time/route.ts  
