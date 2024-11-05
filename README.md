@@ -1,31 +1,32 @@
-# 39 URL Query Parameters   
+# 40 Redirects in Route Handlers  
 
-If we want to filter comments array based on a specific query. For example we need to query that return item that "text" string includes "first" word.   
-```bash 
-localhost:3000/comments?query=first
-```
-
-since we can grap query parameter from the request using nextjs function we no need to put filter "GET" function inside "[id]" folder. just we can add it to "src/app/comments/route.ts"  
-
-1. update following "GET" route handle function for filter query.    
->src/app/comments/route.ts  
+In following dynamic route handler file we wrote code for recevied comment object by it's "id". But here if we asked comment that comment 'id' is not existed then it will show error. To resolve this issue we need to use redirect.     
+>src/app/comments/[id]/route.ts   
 ```tsx 
-import { comments } from "./data";
+import { comments } from "../data";
 
-export async function GET() {
-  return Response.json(comments);
+export async function GET(_request:Request, {params}:{params:{id:string}}) {
+  const comment = comments.find(comment=> comment.id === parseInt(params.id));
+  return Response.json(comment);
 }
 ```
-```tsx 
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const query = searchParams.get("query");
-  const filterComments = query && comments.filter(comment=> comment.text.includes(query));
-  return Response.json(filterComments);
-}
-```
-2. to test above filter   
-```bash 
-localhost:3000/comments?query=ir
-```
 
+1. improve above route handler by redirection to the comments listing page if the request "id" not found. (This is just for demonstration purposes, assuming that ids increment sequentially.) 
+```tsx 
+import { comments } from "../data";
+import { redirect } from "next/navigation"; // add
+
+export async function GET(_request:Request, {params}:{params:{id:string}}) {
+  if(parseInt(params.id)>comments.length){ // add 
+    redirect('/comments');
+  }
+  const comment = comments.find(comment=> comment.id === parseInt(params.id));
+  return Response.json(comment);
+}
+``` 
+
+2. to check just put following link on browser.   
+```bash 
+http://localhost:3000/comments/3
+http://localhost:3000/comments/4  # redirect to /comments route.  
+```
