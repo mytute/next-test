@@ -1,92 +1,26 @@
-# 44 Middleware  
+# 46 Client-side Rendering  
 
-Middleware in Next.js is a powerful feature that offers a robust way to intercept and control the flow of request and responses within your applications.  
+As you know remenver React being the go-to library for creating Single Page Applications (SPAs)  
 
-It does this is a global level significantly enhancing features like redirection, URL rewrites, authentication, headers and cookies management and more.  
-
-Middleware allows us to specify paths where it will be active  
- * Custom matcher config.    
- * Conditional statements.   
-
-
-### Custom matcher config.      
-
-1. create "middleware.ts" file in the root directory and show "matcher" approch with when user route to "/profile" the redurect to the "/" home page.    
->src/middleware.ts  
-```ts 
-import { NextResponse, NextRequest } from "next/server";
-
-export function middleware(request: NextRequest) {
-  return NextResponse.redirect(new URL("/", request.url));
-}
-
-export const config = {
-  matcher: "/profile",
-}
+When creating typical single page application when a client makes a request, server sends a single HTML page to the browser. This HTML page often contains just a simple div tag and a reference to a Javascript file.   
+```html
+<div id="root"></div>
+<script type="text/javascript" src="/static/js/bundle.js"></script>
 ```
+"bundle.js" file contains everything your application needs to run including the react library itself and your application code. This "bundle.js" file will downloaded after html file downloaded. Downloaded javascript code the generates the HTML on your compupter and inserts it into the DOM under the "root" element and you see the user interface in the browser. To prove this you can see downloaded html file(not component generated) in the browser.   
 
+This method of rendering, where the component code is transformed into a user interface directly within the browser(the client), is known as client-side rendering(CSR).  
 
-### Conditional statements.   
+CSR quickly became the standard for SPAs, with widespread adoption.  
 
-2. do same "/profile" to "/" home page redirecting using Conditional statements.   
+It wasn't long before developers began noticing some inherent drawbacks to this approach.  
 
->src/middleware.ts  
-```ts 
-import { NextResponse, NextRequest } from "next/server";
+### Drawbacks of CSR  
+*SEO  
+Generating HTML that mainly contains a single div tag is not optimal for SEO, as it provides little content for search engines to index.  
 
-export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname === "/profile") {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-}
-```
+*Performance  
+Having the browser(the client) handle all the works, such as fetching data, computing the UI, and making the HTML interactive, can slow things down. Users might see a blank screen or a loading spinner while the page loads.  
 
-3. using conditional statement show me how to rewrite "/profile" route to "/" home page. And show even we load "/profile" page but showing home page.  
->src/middleware.ts  
-```ts 
-import { NextResponse, NextRequest } from "next/server";
+Each new feature added to the application increases the size of the JavaScript bundle, prolonging the wait time for users to see the UI.   
 
-export function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname === "/profile") {
-    return NextResponse.rewrite(new URL("/", request.url));
-  }
-}
-```
-
-Let's see how to deal with cookies and headers using middlewares.  
-
-4. modify above middleware to handle user preferences for themes and add custom header for all responses.  
->src/middleware.ts  
-```ts 
-import { NextResponse, NextRequest } from "next/server";
-
-export function middleware(request: NextRequest) {
-    const response = NextResponse.next();
-
-    const themePreference = request.cookies.get("theme");
-    if(!themePreference) {
-      response.cookies.set("theme", "dark");
-    }
-
-    return response;
-}
-```
-
-check before load the route on browser cookies and after load edit the cookies value to "light" and reload and show it not changing.  
-
-5. show me how to add custom route to above code inside middleware.  
->src/middleware.ts  
-```ts 
-import { NextResponse, NextRequest } from "next/server";
-
-export function middleware(request: NextRequest) {
-    const response = NextResponse.next();
-
-    const themePreference = request.cookies.get("theme");
-    if(!themePreference) {
-      response.cookies.set("theme", "dark");
-    }
-    response.headers.set("custom-header", "custom-value");
-    return response;
-}
-```
