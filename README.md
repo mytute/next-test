@@ -14,6 +14,10 @@ $ npx create-next-app@latest
 # Would you like to customize the import alias (`@/*` by default)? … No / Yes (NO)
 ```
 
+Docker builds images in layers, and each command in a Dockerfile creates a new cached layer. If a layer hasn’t changed between builds, Docker reuses it instead of rebuilding.   
+If your dependencies don’t change (package.json stays the same), the npm install layer is cached and don't run "RUN npm install" command.  
+If we remove "COPY package*.json ./" line and put "RUN npm run build" line under "COPY . ." line then the entire Docker build cache is invalidated. Then docker reinstalls all dependencies unnecessarily on every build and this increases build time and wastes resources.   
+
 2. run the next.js application    
 ```bash  
 $ cd hello-world   
