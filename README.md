@@ -1,4 +1,3 @@
-# 2 Hello World  
 
 1. create next.js application   
 ```bash 
