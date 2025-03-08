@@ -63,3 +63,11 @@ run create docker image
 ```bash
 $ sudo docker run -p 3000:3000  --name next-app  my-next-app
 ```
+
+to check memory usage of docker container   
+```bash
+$ sudo docker stats
+# result
+# CONTAINER ID   NAME       CPU %     MEM USAGE / LIMIT   MEM %   NET I/O
+# a1b2c3d4e5f6   my-app     0.45%     200MiB / 2GiB      10.0%   5MB / 3MB
+```
