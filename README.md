@@ -19,3 +19,32 @@ $ npx create-next-app@latest
 $ cd hello-world   
 $ npm run dev
 ```
+
+3. run with docker
+
+```Dockerfile
+# Use official Node.js LTS image
+FROM node:18-alpine
+
+# Set working directory inside the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json first (for better Docker cache usage)
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the entire project
+COPY . .
+
+# Build the project
+RUN npm run build
+
+# Expose port 3000
+EXPOSE 3000
+
+# Start the application
+CMD ["npm", "run", "start"]
+
+```
